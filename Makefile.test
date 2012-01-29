@@ -1,0 +1,18 @@
+.PHONY: force
+outpath ?= output
+
+force:
+
+${outpath}/%: ${O}/% force
+	@mkdir -p ${outpath}
+	@./$< | tee $@.new
+	@$(if ${update},rm -f $@,true)
+	@if [ ! -f $@ ] ; then \
+		echo "new test $(subst ${outpath}/,,$@)"; \
+		mv $@.new $@; \
+	elif diff $@ $@.new ; then \
+		echo "test $(subst ${outpath}/,,$@) passed"; \
+		rm $@.new; \
+	else \
+		echo "test $(subst ${outpath}/,,$@) failed"; \
+	fi
