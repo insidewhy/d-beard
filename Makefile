@@ -10,7 +10,7 @@ O ?= ${cwd}/.obj
 
 ${O}/%: %.d ${libfiles}
 	@mkdir -p ${O}
-	${dmd} -I../.. ${comp_args} -od${O} -of$@ $^
+	${dmd} -I${cwd}/.. ${comp_args} -od${O} -of$@ $^
 
 test:
 	${MAKE} -C test
