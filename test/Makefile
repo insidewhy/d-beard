@@ -1,9 +1,10 @@
-.PHONY: default variant
+.PHONY: default variant meta
 
-default: variant
+default: variant meta
 
 cwd = ..
 include ../Makefile
 include ../Makefile.test
 
 variant: ${outpath}/variant
+meta: ${outpath}/meta
