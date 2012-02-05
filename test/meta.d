@@ -1,7 +1,7 @@
 module beard.test.meta;
 
 import beard.meta.find;
-import beard.meta.contains_match;
+import beard.meta.contains;
 import beard.io;
 
 template isFloat(T) {
