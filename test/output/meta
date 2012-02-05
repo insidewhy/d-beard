@@ -4,3 +4,4 @@ true
 false
 (bool,float,float)
 (int,double,int)
+(void,void,double,void,int,void,void)
