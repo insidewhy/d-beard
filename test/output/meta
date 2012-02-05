@@ -2,3 +2,5 @@ float
 void
 true
 false
+(bool,float,float)
+(int,double,int)
