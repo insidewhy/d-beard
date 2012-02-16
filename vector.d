@@ -9,3 +9,9 @@ auto ref pushBack(T, U)(ref T[] t, U u) {
     t[t.length - 1] = u;
     return t;
 }
+
+auto ref pushFront(T, U)(ref T[] t, U u) {
+    T[] cpy = u ~ t;
+    t = cpy;
+    return t;
+}

@@ -1,7 +1,7 @@
 module beard.cmdline;
 
 import beard.io;
-import beard.vector : Vector, pushBack;
+import beard.vector : pushBack, pushFront;
 
 import std.array : split, join;
 import std.bigint : BigInt;
@@ -85,6 +85,7 @@ class Parser {
         T* valPtr_;
     }
 
+  private:
     struct Help {
         this(string _help) { help = _help; }
 
@@ -102,6 +103,21 @@ class Parser {
         string[] args;
     }
 
+    void addDefaultHelpOption() {
+        if ("h" in optionMap_ && "help" in optionMap_)
+            return;
+
+        auto help = Help("show help");
+        if (! ("h" in optionMap_))
+            pushBack(help.args, "h");
+
+        if (! ("help" in optionMap_))
+            pushBack(help.args, "help");
+
+        pushFront(helps_, help);
+    }
+
+  public:
     ref Parser opCall(T)(string args, T *storage, string helpString) {
         auto vals = split(args, ",");
         auto optValue = new Value!T(storage);
@@ -122,19 +138,13 @@ class Parser {
         return this;
     }
 
+    /// @brief Parse the command line.
+    /// @detailed This will also add -h/--help options to show the help if
+    ///           such options have not already been added.
     void parse(string[] *args) {
         auto state = State(args);
 
-        if (! ("h" in optionMap_ || "help" in optionMap_)) {
-            auto help = Help("show help");
-            if (! ("h" in optionMap_))
-                pushBack(help.args, "h");
-
-            if (! ("help" in optionMap_))
-                pushBack(help.args, "help");
-
-            pushBack(helps_, help);
-        }
+        addDefaultHelpOption;
 
         while (! state.empty) {
             if ('-' != state.firstChar) {
@@ -221,6 +231,7 @@ class Parser {
         }
     }
 
+    /// Has the help been displayed yet?
     bool shownHelp() { return shownHelp_; }
 
   private:
