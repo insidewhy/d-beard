@@ -49,6 +49,12 @@ private void _print(S, H)(S stream, int indent, H h) {
     else static if (__traits(hasMember, H, "printTo")) {
         // better than compiles check in case user messes up a templated
         // printTo and then wonders why it isn't called
+        static if (is (H : Object)) {
+            if (! h) {
+                stream.write("null");
+                return;
+            }
+        }
         h.printTo(indent, stream);
     }
     else stream.write(h);
