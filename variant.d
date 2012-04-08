@@ -75,7 +75,7 @@ struct Variant(T...) {
 
     // this calls directly through a compile time constructed vtable.
     auto apply(F)(ref F f) {
-        alias typeof(F.opCall(T[0])) return_type;
+        alias typeof(f.opCall(T[0])) return_type;
 
         static return_type fwd(uint i)(ref Variant t, ref F f) {
             static if (i < T.length)
