@@ -4,5 +4,8 @@ args:  [
 ]
 opts:  (
     false,
-    true
+    true,
+    true,
+    poodar,
+    dod
 )

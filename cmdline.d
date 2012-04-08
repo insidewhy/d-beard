@@ -35,12 +35,12 @@ class Parser {
         char firstChar() { return front()[argOffset]; }
         char charAt(int idx) { return front()[argOffset + idx]; }
 
+        string substring() { return front()[argOffset..$]; }
+
         void advanceOffset(int incr) {
             argOffset += incr;
-            if (argOffset >= front().length) {
-                argOffset = 0;
+            if (argOffset >= front().length)
                 popArgument();
-            }
         }
 
         // advance pointer, keeping argument in args
@@ -52,7 +52,10 @@ class Parser {
             popArgument();
         }
 
-        void popArgument() { argIdx += 1; }
+        void popArgument() {
+            argIdx += 1;
+            argOffset = 0;
+        }
 
         string[] *args;
         // which argument currently looking at
@@ -77,6 +80,11 @@ class Parser {
                 return true;
             }
             else static if (is(T : string)) {
+                state.advanceOffset(1);
+                if (state.empty) return false;
+                *valPtr_ = state.substring;
+                state.popArgument;
+                return true;
             }
             else {
             }
