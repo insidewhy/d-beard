@@ -2,7 +2,7 @@ module beard.io;
 
 import beard.termcolor;
 import std.stdio;
-import std.typecons;
+import std.typecons : isTuple;
 
 immutable INDENT_STR = "    ";
 
