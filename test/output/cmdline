@@ -1,0 +1,8 @@
+args:  [
+    friend,
+    hello
+]
+opts:  (
+    false,
+    true
+)
