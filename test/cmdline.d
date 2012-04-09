@@ -13,7 +13,9 @@ int main() {
         ("I,include", &opts[4], "your friend basher")
         ;
 
-    auto args = [ "friend", "-Ibeast", "-vs", "poodar", "-dIfriend", "hello" ];
+    auto args = [
+        "friend", "-Ibeast", "-vs", "poodar", "-dIfriend", "--include", "ear",
+        "hello" ];
 
     optParser.parse(&args);
     println("args: ", args);

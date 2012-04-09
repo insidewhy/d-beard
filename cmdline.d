@@ -76,11 +76,9 @@ class Parser {
         private static bool parseHelper(U)(ref U val, ref State state) {
             static if (is(U : bool)) {
                 val = true;
-                state.advanceOffset(1);
                 return true;
             }
             else static if (is(U : string)) {
-                state.advanceOffset(1);
                 if (state.empty) return false;
                 val = state.substring;
                 state.popArgument;
@@ -181,8 +179,14 @@ class Parser {
                     break;
                 }
 
-                // parse long option
-                state.popArgument;
+                string search = front[2..$];
+                state.popArgument; // advance past long option
+                auto value = optionMap_.get(search, null);
+                if (! value)
+                    throw new UnknownCommandLineArgument(front);
+
+                if (! value.parse(state))
+                    throw new BadCommandLineArgumentValue(front);
             }
             else {
                 // parse short option.. maybe more than one
@@ -200,6 +204,7 @@ class Parser {
                     if (! value)
                         throw new UnknownCommandLineArgument(front);
 
+                    state.advanceOffset(1); // advance past option
                     if (! value.parse(state))
                         throw new BadCommandLineArgumentValue(front);
                 } while (state.argOffset);

@@ -9,6 +9,7 @@ opts:  (
     poodar,
     [
         beast,
-        friend
+        friend,
+        ear
     ]
 )
