@@ -73,21 +73,30 @@ class Parser {
     class Value(T) : AbstractValue {
         this(T *ptr) { valPtr_ = ptr; }
 
-        bool parse(ref State state) {
-            static if (is(T : bool)) {
-                *valPtr_ = true;
+        private static bool parseHelper(U)(ref U val, ref State state) {
+            static if (is(U : bool)) {
+                val = true;
                 state.advanceOffset(1);
                 return true;
             }
-            else static if (is(T : string)) {
+            else static if (is(U : string)) {
                 state.advanceOffset(1);
                 if (state.empty) return false;
-                *valPtr_ = state.substring;
+                val = state.substring;
                 state.popArgument;
+                return true;
+            }
+            else static if (is(U V : V[])) {
+                val.length += 1;
+                parseHelper(val[val.length - 1], state);
                 return true;
             }
             else {
             }
+        }
+
+        bool parse(ref State state) {
+            return parseHelper(*valPtr_, state);
         }
 
         T* valPtr_;
