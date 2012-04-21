@@ -100,6 +100,13 @@ struct Variant(T...) {
 
     ref T as(T)() { return * cast(T*) &value_; }
 
+    bool isType(U)() {
+        static if (contains!(U, types))
+            return idx_ == staticIndexOf!(U, types);
+        else
+            static assert(false, "type not in variant");
+    }
+
     bool empty() @property const { return idx_ >= T.length; }
 
     void reset() {

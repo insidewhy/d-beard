@@ -41,6 +41,8 @@ int main() {
     auto src = src_t();
     auto dest = dest_t();
     src = 4;
+    println(src.isType!float);
+    println(src.isType!int);
     dest = src;
     println(dest);
 
