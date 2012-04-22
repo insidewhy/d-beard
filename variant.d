@@ -2,6 +2,7 @@ module beard.variant;
 
 import beard.meta.fold_left : foldLeft2;
 import beard.meta.contains : contains;
+import beard.meta.map : map;
 import beard.io;
 import std.c.string : memcpy;
 import std.typetuple : staticIndexOf;
@@ -73,8 +74,16 @@ struct Variant(T...) {
         apply(variantPrint(stream, indent));
     }
 
-    // this calls directly through a compile time constructed vtable.
-    auto apply(F)(ref F f) {
+    // helper for creating forwarding array mixins
+    private static string makeFwd(uint idx)() {
+        static if (idx < T.length + 1)
+            return (idx ? "," : "[") ~
+                    "&fwd!" ~ idx.stringof ~ makeFwd!(idx + 1);
+        else
+            return "]";
+    }
+
+    private auto applyStruct(F)(ref F f) {
         alias typeof(f.opCall(T[0])) return_type;
 
         static return_type fwd(uint i)(ref Variant t, ref F f) {
@@ -84,18 +93,65 @@ struct Variant(T...) {
                 return f.empty();
         }
 
-        static string makeFwd(uint idx)() {
-            static if (idx < T.length + 1)
-                return (idx ? "," : "[") ~
-                        "&fwd!" ~ idx.stringof ~ makeFwd!(idx + 1);
-            else
-                return "]";
-        }
-
         static return_type function(ref Variant, ref F)[T.length + 1] forwarders =
             mixin(makeFwd!0());
 
         return forwarders[this.idx_](this, f);
+    }
+
+    private static auto callMatching(A, F...)(auto ref A a, F f) {
+        static if (! F.length) {
+            static assert(false, "no matching function");
+        }
+        else static if (__traits(compiles, f[0](a))) {
+            return f[0](a);
+        }
+        else {
+            return callMatching(a, f[1..$]);
+        }
+    }
+
+    private static auto callEmpty(F...)(F f) {
+        static if (! F.length) {
+            static assert(false, "no matching function for empty");
+        }
+        else static if (__traits(compiles, f[0]())) {
+            return f[0]();
+        }
+        else {
+            return callEmpty(f[1..$]);
+        }
+    }
+
+    private auto applyFunctions(F...)(F f) {
+        static if(is(F[0] return_type == return)) {
+            static return_type fwd(uint i)(ref Variant t, F f) {
+                static if (i < T.length) {
+                    alias T[i] ArgType;
+                    return callMatching(t.as!ArgType, f);
+                }
+                else
+                    return callEmpty(f);
+            }
+
+            static return_type function(ref Variant, F)[T.length + 1] forwarders =
+                mixin(makeFwd!0());
+
+            return forwarders[this.idx_](this, f);
+        }
+        else {
+            static assert(false, "incorrect arguments");
+        }
+    }
+
+    // this calls directly through a compile time constructed vtable.
+    auto apply(F...)(auto ref F f) {
+        static if (F.length == 1 && __traits(hasMember, f[0], "opCall")) {
+            return applyStruct(f[0]);
+        }
+        else {
+            return applyFunctions(f);
+        }
     }
 
     ref T as(T)() { return * cast(T*) &value_; }

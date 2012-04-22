@@ -13,6 +13,12 @@ class S {
     }
 }
 
+struct Applier {
+    string opCall(int v) { println("int:", v); return "int"; }
+    string opCall(float v) { println("float:", v); return "float"; }
+    string empty() { println("empty"); return "empty"; }
+}
+
 int main() {
     alias Variant!(float, int, string, S) var1_t;
 
@@ -40,11 +46,35 @@ int main() {
     alias Variant!(float, int) dest_t;
     auto src = src_t();
     auto dest = dest_t();
+    dest.apply(
+        (int v) { println("into:", v); },
+        (float v) { println("floato:", v); },
+        () { println("empty"); }
+    );
+
     src = 4;
     println(src.isType!float);
     println(src.isType!int);
     dest = src;
     println(dest);
+
+    Applier app;
+    println("friend:", dest.apply(app));
+    dest = 4.4f;
+    println("friend:", dest.apply(app));
+
+    println(dest.apply(
+        (float v) { println("floator:", v); return "floator"; },
+        (int v) { println("intor:", v); return "intor"; },
+        () { println("empty"); return "empty"; }
+    ));
+
+    dest = 6;
+    dest.apply(
+        (int v) { println("into:", v); },
+        (float v) { println("floato:", v); },
+        () { println("empty"); }
+    );
 
     // alias Variant!(void, float, int, string, S) var2_t;
     // var2_t ov1;

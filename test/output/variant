@@ -5,6 +5,14 @@ booby
 null
 <empty>
 1.2
+empty
 false
 true
 4
+int: 4
+friend: int
+float: 4.4
+friend: float
+floator: 4.4
+floator
+into: 6
