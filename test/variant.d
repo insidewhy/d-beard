@@ -13,6 +13,13 @@ class S {
     }
 }
 
+class Parent {
+    this(string s) { s_ = s; }
+    string s_;
+}
+class Child1 : Parent { this(string s) { super("child1: " ~ s); } }
+class Child2 : Parent { this(string s) { super("child2: " ~ s); } }
+
 struct Applier {
     string opCall(int v) { println("int:", v); return "int"; }
     string opCall(float v) { println("float:", v); return "float"; }
@@ -76,7 +83,24 @@ int main() {
         () { println("empty"); }
     );
 
-    // alias Variant!(void, float, int, string, S) var2_t;
-    // var2_t ov1;
+    auto vc = Variant!(Child1,Child2)();
+    vc = new Child2("baby");
+    vc.apply(
+        (Parent p) { println("parent-", p.s_); },
+        // the next can't be reached as Parent will always match first. Even
+        // though the method lookup is done in a single step without iterating
+        // through all possible functions and testing.. it still targets the
+        // earliest match
+        (Child2 c) { println("can never be reached:", c.s_); },
+        () { println("empty"); }
+    );
+
+    // now it'll work :)
+    vc.apply(
+        (Child2 c) { println("child-", c.s_); },
+        (Parent p) { println("parent-", p.s_); },
+        () { println("empty"); }
+    );
+
     return 0;
 }
