@@ -2,9 +2,10 @@ module beard.variant;
 
 import beard.meta.fold_left : foldLeft2;
 import beard.meta.contains : contains;
+import beard.meta.child_of : ChildOf;
 import beard.io;
 import std.c.string : memcpy;
-import std.typetuple : staticIndexOf;
+import std.typetuple : staticIndexOf, allSatisfy;
 import std.traits : Unqual;
 
 private template maxSize(size_t _size) {
@@ -122,6 +123,7 @@ struct Variant(T...) {
         }
     }
 
+    // Helper for apply when using many function parameters.
     private auto applyFunctions(F...)(F f) {
         static if(is(F[0] return_type == return)) {
             static return_type fwd(uint i)(ref Variant t, F f) {
@@ -143,7 +145,9 @@ struct Variant(T...) {
         }
     }
 
-    // this calls directly through a compile time constructed vtable.
+    // This calls directly through a compile time constructed vtable.
+    // See the examples in test/variant.d, it's not as complicated as
+    // it seems.
     auto apply(F...)(auto ref F f) {
         static if (F.length == 1 && __traits(hasMember, f[0], "opCall")) {
             return applyStruct(f[0]);
@@ -153,8 +157,19 @@ struct Variant(T...) {
         }
     }
 
+    // Unsafe cast to a value, use apply to do this safely.
     ref T as(T)() { return * cast(T*) &value_; }
 
+    // If U is a base class of all possible storable types, then return
+    // it. If the variant is empty the reference this returns will be garbage.
+    ref U base(U)() {
+        static assert(allSatisfy!(ChildOf!U.Eval, types),
+                      "not a common base class");
+        return as!U;
+    }
+
+    // Test if the variant is currently storing type U directly (not via
+    // superclass relationship).
     bool isType(U)() {
         static if (contains!(U, types))
             return idx_ == staticIndexOf!(U, types);
@@ -162,8 +177,10 @@ struct Variant(T...) {
             static assert(false, "type not in variant");
     }
 
+    // Test if the variant is empty.
     bool empty() @property const { return idx_ >= T.length; }
 
+    // Make variant empty.
     void reset() {
         // run destructor on existing class?
         idx_ = n_types;

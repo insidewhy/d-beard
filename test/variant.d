@@ -102,5 +102,7 @@ int main() {
         () { println("empty"); }
     );
 
+    println("base", vc.base!Parent.s_);
+
     return 0;
 }
