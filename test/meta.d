@@ -2,8 +2,9 @@ module beard.test.meta;
 
 import beard.meta.find;
 import beard.meta.contains;
-import beard.meta.map;
 import beard.io;
+
+import std.typetuple : staticMap;
 
 template isFloat(T) {
    enum isFloat = is(T == float);
@@ -30,6 +31,6 @@ int main() {
     println(typeid(filter!(isFloatOrBool, int, bool, double, float, float, int)));
 
     println(typeid(
-        map!(floatOrBoolToVoid, float, bool, double, bool, int, bool, float)));
+        staticMap!(floatOrBoolToVoid, float, bool, double, bool, int, bool, float)));
     return 0;
 }
