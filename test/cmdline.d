@@ -21,5 +21,9 @@ int main() {
     println("args: ", args);
     println("opts: ", opts);
 
+    args = [ "friend", "--help" ];
+    optParser.parse(&args);
+    println("shown help: ", optParser.shownHelp);
+
     return 0;
 }

@@ -100,6 +100,16 @@ class Parser {
         T* valPtr_;
     }
 
+    class ShowHelp : AbstractValue {
+        this(Parser parser) { parser_ = parser; }
+        private Parser parser_;
+
+        bool parse(ref State state) {
+            parser_.showHelp;
+            return true;
+        }
+    }
+
   private:
     struct Help {
         this(string _help) { help = _help; }
@@ -122,12 +132,18 @@ class Parser {
         if ("h" in optionMap_ && "help" in optionMap_)
             return;
 
-        auto help = Help("show help");
-        if (! ("h" in optionMap_))
-            pushBack(help.args, "h");
+        auto helpShower = new ShowHelp(this);
 
-        if (! ("help" in optionMap_))
+        auto help = Help("show help");
+        if (! ("h" in optionMap_)) {
+            pushBack(help.args, "h");
+            optionMap_["h"] = helpShower;
+        }
+
+        if (! ("help" in optionMap_)) {
             pushBack(help.args, "help");
+            optionMap_["help"] = helpShower;
+        }
 
         pushFront(helps_, help);
     }
@@ -192,12 +208,6 @@ class Parser {
                 // parse short option.. maybe more than one
                 state.advanceOffset(1);
                 do {
-                    if ('h' == state.firstChar) {
-                        showHelp;
-                        state.advanceOffset(1);
-                        continue;
-                    }
-
                     string search = "" ~ state.firstChar;
 
                     auto value = optionMap_.get(search, null);

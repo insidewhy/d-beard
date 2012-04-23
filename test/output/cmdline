@@ -13,3 +13,10 @@ opts:  (
         ear
     ]
 )
+usage: test [options] {extra}
+  -h, --help     show help
+  -d, --dump     dump on faces
+  -v             increase verbosity
+  -s, --strong   here is my face
+  -I, --include  your friend basher
+shown help:  true
