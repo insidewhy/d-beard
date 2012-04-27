@@ -17,13 +17,20 @@ class Parent {
     this(string s) { s_ = s; }
     string s_;
 }
-class Child1 : Parent { this(string s) { super("child1: " ~ s); } }
-class Child2 : Parent { this(string s) { super("child2: " ~ s); } }
 
 struct Applier {
     string opCall(int v) { println("int:", v); return "int"; }
     string opCall(float v) { println("float:", v); return "float"; }
     string empty() { println("empty"); return "empty"; }
+}
+
+class Child1 : Parent { this(string s) { super("child1: " ~ s); } }
+class Child2 : Parent { this(string s) { super("child2: " ~ s); } }
+
+struct Applier2 {
+    void opCall(Child1 v) { println("app2 c1 -", v.s_); }
+    void opCall(Child2 v) { println("app2 c2 -", v.s_); }
+    void empty() { println("empty"); }
 }
 
 int main() {
@@ -103,6 +110,17 @@ int main() {
     );
 
     println("base", vc.base!Parent.s_);
+
+    // test with class as fallback after functions
+    Applier2 app2;
+    vc.apply(
+        (Child1 c) { println("special child1 -", c.s_); },
+        app2);
+
+    vc = new Child1("first");
+    vc.apply(
+        (Child1 c) { println("special child1 -", c.s_); },
+        app2);
 
     return 0;
 }

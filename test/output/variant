@@ -19,3 +19,5 @@ into: 6
 parent- child2: baby
 child- child2: baby
 base child2: baby
+app2 c2 - child2: baby
+special child1 - child1: first

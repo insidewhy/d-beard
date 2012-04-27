@@ -106,6 +106,9 @@ struct Variant(T...) {
         else static if (__traits(compiles, f[0](a))) {
             return f[0](a);
         }
+        else static if (__traits(compiles, f[0].opCall(a))) {
+            return f[0].opCall(a);
+        }
         else {
             return callMatching(a, f[1..$]);
         }
@@ -118,14 +121,28 @@ struct Variant(T...) {
         else static if (__traits(compiles, f[0]())) {
             return f[0]();
         }
+        else static if (__traits(compiles, f[0].empty())) {
+            return f[0].empty();
+        }
         else {
             return callEmpty(f[1..$]);
         }
     }
 
+    private class None {};
+    private template GetReturnType(T) {
+        static if(is(T return_type == return))
+            alias return_type GetReturnType;
+        // static else if(__traits(compiles, T(...))
+        //     alias ... GetReturnType;
+        else
+            alias None GetReturnType;
+    }
+
     // Helper for apply when using many function parameters.
     private auto applyFunctions(F...)(F f) {
-        static if(is(F[0] return_type == return)) {
+        alias GetReturnType!(F[0]) return_type;
+        static if(! is(return_type : None)) {
             static return_type fwd(uint i)(ref Variant t, F f) {
                 static if (i < T.length) {
                     alias T[i] ArgType;
@@ -149,12 +166,10 @@ struct Variant(T...) {
     // See the examples in test/variant.d, it's not as complicated as
     // it seems.
     auto apply(F...)(auto ref F f) {
-        static if (F.length == 1 && __traits(hasMember, f[0], "opCall")) {
+        static if (F.length == 1 && __traits(hasMember, f[0], "opCall"))
             return applyStruct(f[0]);
-        }
-        else {
+        else
             return applyFunctions(f);
-        }
     }
 
     // Unsafe cast to a value, use apply to do this safely.
