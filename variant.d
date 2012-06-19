@@ -100,6 +100,8 @@ struct Variant(T...) {
     }
 
     private static auto callMatching(A, F...)(auto ref A a, F f) {
+        // TODO: use something other than compiles which can
+        //       hide genuine errors
         static if (! F.length) {
             static assert(false, "no matching function");
         }

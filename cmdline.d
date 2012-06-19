@@ -66,35 +66,33 @@ class Parser {
         int       nextSaveIdx = 1;
     }
 
-    class AbstractValue {
-        bool parse(ref State state) { return false; }
+    interface AbstractValue {
+        void parse(ref State state);
     }
 
     class Value(T) : AbstractValue {
         this(T *ptr) { valPtr_ = ptr; }
 
-        private static bool parseHelper(U)(ref U val, ref State state) {
+        private static void parseHelper(U)(ref U val, ref State state) {
             static if (is(U : bool)) {
                 val = true;
-                return true;
             }
             else static if (is(U : string)) {
-                if (state.empty) return false;
+                if (state.empty)
+                    throw new BadCommandLineArgumentValue(state.front);
                 val = state.substring;
                 state.popArgument;
-                return true;
             }
             else static if (is(U V : V[])) {
                 val.length += 1;
                 parseHelper(val[val.length - 1], state);
-                return true;
             }
             else {
             }
         }
 
-        bool parse(ref State state) {
-            return parseHelper(*valPtr_, state);
+        void parse(ref State state) {
+            parseHelper(*valPtr_, state);
         }
 
         T* valPtr_;
@@ -104,10 +102,7 @@ class Parser {
         this(Parser parser) { parser_ = parser; }
         private Parser parser_;
 
-        bool parse(ref State state) {
-            parser_.showHelp;
-            return true;
-        }
+        void parse(ref State state) { parser_.showHelp; }
     }
 
   private:
@@ -201,8 +196,7 @@ class Parser {
                 if (! value)
                     throw new UnknownCommandLineArgument(front);
 
-                if (! value.parse(state))
-                    throw new BadCommandLineArgumentValue(front);
+                value.parse(state);
             }
             else {
                 // parse short option.. maybe more than one
@@ -215,8 +209,7 @@ class Parser {
                         throw new UnknownCommandLineArgument(front);
 
                     state.advanceOffset(1); // advance past option
-                    if (! value.parse(state))
-                        throw new BadCommandLineArgumentValue(front);
+                    value.parse(state);
                 } while (state.argOffset);
             }
         }
