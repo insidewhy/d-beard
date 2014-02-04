@@ -1,6 +1,6 @@
 module beard.meta.fold_left;
 
-/// Produces F(Tn, F(.., F(T2, F(T1, A))))
+/// Produces F(Tn, F(.., F(T2, F(A, T1))))
 template foldLeft(alias F, alias A) {
     alias A foldLeft;
 }
