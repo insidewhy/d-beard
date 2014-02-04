@@ -1,6 +1,6 @@
 {
 	"name": "d-beard",
-	"description": "A minimal D application.",
+	"description": "A set of support libraries.",
 	"copyright": "Copyright © 2014, James Pike",
 	"authors": ["chilon"],
   "license": "MIT",
