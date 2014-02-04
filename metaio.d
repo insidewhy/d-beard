@@ -43,3 +43,4 @@ void printType(T, S)(S stream, int indent = 0) {
 void printType(T)(int indent = 0) {
     printType!T(stdout, indent);
 }
+// vim:ts=4 sw=4

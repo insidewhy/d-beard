@@ -224,3 +224,4 @@ template isVariant(T) {
     else
         enum isVariant = false;
 }
+// vim:ts=4 sw=4

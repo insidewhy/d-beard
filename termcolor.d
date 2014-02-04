@@ -27,3 +27,4 @@ auto sLightCyan   = "\033[1;36m";
 // auto sWhite   = "\033[1;47m";
 
 auto sNeutral = "\033[0;m";
+// vim:ts=4 sw=4

@@ -15,3 +15,4 @@ auto ref pushFront(T, U)(ref T[] t, U u) {
     t = cpy;
     return t;
 }
+// vim:ts=4 sw=4

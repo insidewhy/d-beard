@@ -6,3 +6,4 @@ ptrdiff_t lastIndexOf(H, N)(H h, N n) {
         else if (! i) return -1;
     }
 }
+// vim:ts=4 sw=4

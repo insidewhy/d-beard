@@ -86,3 +86,4 @@ void println(T...)(T t) {
     print(t);
     writeln();
 }
+// vim:ts=4 sw=4

@@ -34,3 +34,4 @@ int main() {
         staticMap!(floatOrBoolToVoid, float, bool, double, bool, int, bool, float)));
     return 0;
 }
+// vim:ts=4 sw=4

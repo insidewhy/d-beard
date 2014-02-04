@@ -2,7 +2,7 @@ module beard.meta.type_list;
 
 public import std.typetuple : TypeTuple, staticIndexOf;
 
-// like TupleList but packs everything into one type
+/// like TupleList but packs everything into one type
 template TL(T...) {
     alias TypeTuple!T types;
 
@@ -18,3 +18,4 @@ template TL(T...) {
         enum indexOf = staticIndexOf!(U, T);
     }
 }
+// vim:ts=4 sw=4

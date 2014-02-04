@@ -3,7 +3,7 @@ public import beard.meta.type_list : TL;
 public import beard.meta.fold_left : foldLeft;
 public import beard.meta.inverse : inverse;
 
-// Returns the first type for which C!T returns true, else return void.
+/// Returns the first type for which C!T returns true, else return void.
 template find(alias C, T...) {
     static if (! T.length)
         alias void find;
@@ -13,7 +13,7 @@ template find(alias C, T...) {
         alias find!(C, T[1..$]) find;
 }
 
-// Return all the types for which C!T returns true.
+/// Return all the types for which C!T returns true.
 template findAll(alias C, T...) {
     template fold(alias R, U) {
         static if (C!U)
@@ -25,7 +25,8 @@ template findAll(alias C, T...) {
     alias foldLeft!(fold, TL!(), T).types findAll;
 }
 
-// Return all the types for which C!T returns false.
+/// Return all the types for which C!T returns false.
 template filter(alias C, T...) {
     alias findAll!(inverse!C, T) filter;
 }
+// vim:ts=4 sw=4

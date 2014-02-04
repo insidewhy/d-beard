@@ -4,6 +4,7 @@ public import beard.meta.type_list;
 public import beard.meta.fold_left : foldLeft;
 public import beard.meta.contains  : contains;
 
+/// A typeset (contains no duplicate types).
 template TSet(T...) {
     mixin TL!T;
 
@@ -20,3 +21,4 @@ template TSet(T...) {
         alias foldLeft!(add, TSet!T, U) append;
     }
 }
+// vim:ts=4 sw=4

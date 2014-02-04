@@ -265,3 +265,4 @@ class Parser {
     Help[]                helps_;
     string                banner_;
 }
+// vim:ts=4 sw=4

@@ -4,3 +4,4 @@ public import beard.meta.inverse;
 public import beard.meta.fold_left;
 public import beard.meta.type_list;
 public import beard.meta.type_set;
+// vim:ts=4 sw=4
