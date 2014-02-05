@@ -1,4 +1,4 @@
-module beard.meta.type_list;
+module beard.type_list;
 
 public import std.typetuple : TypeTuple, staticIndexOf;
 

@@ -1,8 +1,8 @@
 module beard.variant;
 
-import beard.meta.fold_left : foldLeft2;
-import beard.meta.contains : contains;
-import beard.meta.child_of : ChildOf;
+import beard.fold_left : foldLeft2;
+import beard.contains : contains;
+import beard.child_of : ChildOf;
 import beard.io;
 import std.c.string : memcpy;
 import std.typetuple : staticIndexOf, allSatisfy;

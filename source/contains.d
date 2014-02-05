@@ -1,4 +1,4 @@
-module beard.meta.contains;
+module beard.contains;
 
 public import std.typetuple : staticIndexOf;
 

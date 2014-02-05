@@ -1,4 +1,4 @@
-module beard.metaio;
+module beard.print_type;
 
 import beard.io;
 import std.stdio;

@@ -1,8 +1,8 @@
-module beard.meta.type_set;
+module beard.type_set;
 
-public import beard.meta.type_list;
-public import beard.meta.fold_left : foldLeft;
-public import beard.meta.contains  : contains;
+public import beard.type_list;
+public import beard.fold_left : foldLeft;
+public import beard.contains  : contains;
 
 /// A typeset (contains no duplicate types).
 template TSet(T...) {

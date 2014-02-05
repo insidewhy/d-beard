@@ -1,7 +1,7 @@
-module beard.meta.find;
-public import beard.meta.type_list : TL;
-public import beard.meta.fold_left : foldLeft;
-public import beard.meta.inverse : inverse;
+module beard.find;
+public import beard.type_list : TL;
+public import beard.fold_left : foldLeft;
+public import beard.inverse : inverse;
 
 /// Returns the first type for which C!T returns true, else return void.
 template find(alias C, T...) {

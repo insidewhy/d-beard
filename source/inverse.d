@@ -1,4 +1,4 @@
-module beard.meta.inverse;
+module beard.inverse;
 
 /// Modifies a boolean returning meta-function C to return the inverse.
 template inverse(alias C) {

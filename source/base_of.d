@@ -1,4 +1,4 @@
-module beard.meta.base_of;
+module beard.base_of;
 
 /// Tests if P is a superclass of C.
 template BaseOf(P, C) {
